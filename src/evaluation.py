@@ -15,12 +15,19 @@ def summarize_results(df, t_stat, p_val, bayes_results, uplift_summary):
         classical_practical_msg = "The effect is small and may not be practically meaningful."
 
     # Bayesian Effect Size
-    bayes_delta = bayes_results['posterior_mean_treatment'] - bayes_results['posterior_mean_control']
+    # Check for required keys in bayes_results
+    bayes_delta = bayes_results.get('posterior_mean_treatment', 0) - bayes_results.get('posterior_mean_control', 0)
     if abs(bayes_delta) >= practical_threshold:
         bayes_practical_msg = "The effect is practically significant (>= 1.5% difference)."
     else:
         bayes_practical_msg = "The effect is small and may not be practically meaningful."
 
+    # Uplift Summary
+    uplift_auc = uplift_summary.get('uplift_auc', 'N/A')
+    estimated_avg_uplift = uplift_summary.get('estimated_avg_uplift', 'N/A')
+    example_uplift_scores = uplift_summary.get('example_uplift_scores', 'N/A')
+
+    # Compile the full summary
     summary = f"""
 ==== EXPERIMENT RESULTS SUMMARY ====
 
@@ -38,16 +45,16 @@ Classical A/B Test:
   - Practical Significance: {classical_practical_msg}
 
 Bayesian Inference:
-  - Posterior Mean (Control): {bayes_results['posterior_mean_control']:.4f}
-  - Posterior Mean (Treatment): {bayes_results['posterior_mean_treatment']:.4f}
-  - Probability Treatment > Control: {bayes_results['prob_treatment_better']:.4f}
+  - Posterior Mean (Control): {bayes_results.get('posterior_mean_control', 'N/A'):.4f}
+  - Posterior Mean (Treatment): {bayes_results.get('posterior_mean_treatment', 'N/A'):.4f}
+  - Probability Treatment > Control: {bayes_results.get('prob_treatment_better', 'N/A'):.4f}
   - Estimated Effect Size (Delta): {bayes_delta:.4f}
   - Practical Significance: {bayes_practical_msg}
 
 Uplift Modeling:
-  - Uplift AUC: {uplift_summary['uplift_auc']:.4f}
-  - Estimated Avg Uplift: {uplift_summary['estimated_avg_uplift']:.4f}
-  - Sample Uplift Scores: {uplift_summary['example_uplift_scores']}
+  - Uplift AUC: {uplift_auc:.4f}
+  - Estimated Avg Uplift: {estimated_avg_uplift:.4f}
+  - Sample Uplift Scores: {example_uplift_scores}
 
 ====================================
     """
