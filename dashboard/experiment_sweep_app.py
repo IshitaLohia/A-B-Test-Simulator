@@ -15,32 +15,23 @@ from src.uplift_model import model_uplift_effects
 from src.evaluation import summarize_results
 
 # Streamlit UI Setup
-st.set_page_config(page_title="A/B Test Simulator", page_icon="📊", layout="wide")
+st.set_page_config(page_title="A/B Test Simulator", layout="wide")
 
-# Dark mode toggle
-mode = st.sidebar.radio("🌓 Select Theme", ["Light", "Dark"])
-if mode == "Dark":
-    st.markdown("""
-        <style>
-            body {background-color: #111; color: #f0f0f0;}
-            .block-container {background-color: #1c1c1c; color: #f0f0f0;}
-        </style>
-    """, unsafe_allow_html=True)
 
 # Title
 st.markdown("""
-    <h2 style='text-align: center; color: #333; margin-top: 1rem;'>📊 A/B Test Experimentation Simulator</h2>
+    <h2 style='text-align: center; color: #333; margin-top: 1rem;'>A/B Test Experimentation Simulator</h2>
 """, unsafe_allow_html=True)
 
 # Sidebar Controls
 with st.sidebar:
-    st.header("🧪 Experiment Controls")
+    st.header("Experiment Controls")
     st.caption("Use these controls to simulate and visualize A/B test scenarios:")
-    n_users = st.slider("👥 Sample Size (Number of Users)", 1000, 50000, 10000, step=1000)
-    treatment_effect = st.slider("🎯 Treatment Effect (%)", 0.0, 0.1, 0.02, step=0.005)
-    dropout_rate = st.slider("❌ Dropout Rate", 0.0, 0.5, 0.1, step=0.01)
-    stratify = st.checkbox("📱 Stratified Assignment (by device)", value=True)
-    seed = st.number_input("🎲 Random Seed", min_value=0, value=42, step=1)
+    n_users = st.slider("Sample Size (Number of Users)", 1000, 50000, 10000, step=1000)
+    treatment_effect = st.slider("Treatment Effect (%)", 0.0, 0.1, 0.02, step=0.005)
+    dropout_rate = st.slider("Dropout Rate", 0.0, 0.5, 0.1, step=0.01)
+    stratify = st.checkbox("Stratified Assignment (by device)", value=True)
+    seed = st.number_input("Random Seed", min_value=0, value=42, step=1)
 
 # Generate and process data
 df = generate_experiment_data(
@@ -70,11 +61,11 @@ st.session_state.simulations.append({
 })
 
 # Layout Single Screen
-st.subheader("📄 Results Summary")
+st.subheader("Results Summary")
 st.text_area("Experiment Output", summary, height=500)
 
 # Distributions Side-by-Side
-st.subheader("📈 Metric Distributions with Confidence Intervals")
+st.subheader("Metric Distributions with Confidence Intervals")
 col1, col2 = st.columns(2)
 
 with col1:
@@ -105,12 +96,12 @@ with col2:
     st.pyplot(fig2)
 
 # Display Recorded Simulations
-st.subheader("📋 Recorded Simulations")
+st.subheader("Recorded Simulations")
 simulation_df = pd.DataFrame(st.session_state.simulations)
 st.dataframe(simulation_df)
 
 # Optional Power Curve
-with st.expander("📉 Show Power Curve Simulation"):
+with st.expander("Show Power Curve Simulation"):
     import statsmodels.stats.power as smp
     st.markdown("Estimate the statistical power for detecting a given effect size.")
     effect_size = treatment_effect / df["post_metric"].std()
