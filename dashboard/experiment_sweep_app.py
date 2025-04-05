@@ -15,7 +15,7 @@ from src.uplift_model import model_uplift_effects
 from src.evaluation import summarize_results
 
 # Streamlit UI Setup
-st.set_page_config(page_title="A/B Test Simulator", page_icon=None, layout="wide")
+st.set_page_config(page_title="A/B Test Simulator", layout="wide")
 
 # Dark mode toggle
 mode = st.sidebar.radio("Select Theme", ["Light", "Dark"])
