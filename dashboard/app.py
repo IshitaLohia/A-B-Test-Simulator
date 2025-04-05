@@ -12,7 +12,7 @@ from src.uplift_model import model_uplift_effects
 from src.evaluation import summarize_results
 
 st.set_page_config(page_title="A/B Test Simulator", layout="wide")
-st.title("📊 Meta-Style A/B Testing Simulator")
+st.title("📊 A/B Testing Simulator")
 
 with st.sidebar:
     st.header("Experiment Controls")
