@@ -11,14 +11,14 @@ def summarize_results(df, t_stat, p_val, bayes_results, uplift_summary):
     classical_delta = classical_treatment.mean() - classical_control.mean()
 
     if abs(classical_delta) >= practical_threshold:
-        classical_practical_msg =f"The observed difference of {delta_size:.4f} is **practically significant**."
+        classical_practical_msg =f"The observed difference of {classical_delta:.4f} is **practically significant**."
     else:
         classical_practical_msg = "The effect is small and may not be practically meaningful."
 
     # Bayesian Effect Size
     bayes_delta = bayes_results['posterior_mean_treatment'] - bayes_results['posterior_mean_control']
     if abs(bayes_delta) >= practical_threshold:
-        bayes_practical_msg = f"The observed difference of {delta_size:.4f} is **practically significant**."
+        bayes_practical_msg = f"The observed difference of {classical_delta:.4f} is **practically significant**."
     else:
         bayes_practical_msg = "The effect is small and may not be practically meaningful."
 
