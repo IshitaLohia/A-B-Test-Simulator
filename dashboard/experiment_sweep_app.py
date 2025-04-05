@@ -27,7 +27,6 @@ st.markdown("""
     </style>
     """, unsafe_allow_html=True)
 
-st.title("A/B Test Simulator")
 
 # rest of your app content...
 
