@@ -60,7 +60,7 @@ bayes_results = run_bayesian_ab_test(df)
 uplift_summary = model_uplift_effects(df)
 summary = summarize_results(df, t_stat, p_val, bayes_results, uplift_summary)
 
-# Store current results in session state
+# Append the current simulation's results to session state
 st.session_state.simulations.append({
     "sample_size": n_users,
     "dropout_rate": dropout_rate,
