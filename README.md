@@ -6,7 +6,7 @@ An interactive Streamlit application that simulates and analyzes A/B tests using
 
 ## 🚀 Live App
 Check out the deployed app here:
-👉 [https://A-B-Test-Simulator.streamlit.app](https://A-B-Test-Simulator.streamlit.app) *(replace with your actual link after deploying)*
+[https://A-B-Test-Simulator.streamlit.app](https://A-B-Test-Simulator.streamlit.app) *(replace with your actual link after deploying)*
 
 ---
 
@@ -62,14 +62,11 @@ streamlit run dashboard/app.py
 This simulator allows you to design and evaluate A/B tests by controlling key experimental parameters and visualizing the outcomes. Here's how it works:
 
 1. **Simulate Data**: You define the number of users, expected treatment effect, dropout rate, and whether to stratify by a feature (like device type).
-
 2. **Apply CUPED**: A variance reduction technique that adjusts post-treatment metrics using pre-treatment data to increase statistical power.
-
 3. **Analyze Results**:
    - **Classical Inference**: Uses a t-test to compute the p-value and confidence intervals.
    - **Bayesian Inference**: Estimates the posterior probability that treatment outperforms control.
    - **Uplift Modeling**: Identifies segments of users who are more or less likely to benefit from the treatment.
-
 4. **Visualize Outputs**: Real-time plots of pre/post distributions and CUPED-adjusted metrics help users interpret effects.
 
 ---
@@ -82,7 +79,6 @@ This simulator allows you to design and evaluate A/B tests by controlling key ex
 ---
 
 ## 👨‍💻 Author
-*Built with ❤️ by Ishita Lohia*
-- [GitHub Profile](https://github.com/IshitaLohia)
-- [LinkedIn](https://linkedin.com/in/yourprofile)
-
+Built with ❤️ by Ishita Lohia  
+[GitHub Profile](https://github.com/IshitaLohia)  
+[LinkedIn](https://linkedin.com/in/yourprofile)
