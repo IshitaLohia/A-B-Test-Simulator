@@ -87,5 +87,6 @@ The dashboard displays:
 ## 👨‍💻 Author
 Built with ❤️ by Ishita Lohia  
 [GitHub Profile](https://github.com/IshitaLohia)  
-https://www.linkedin.com/in/ishita-lohia-469551122/
+[Linkedin Profile]((https://www.linkedin.com/in/ishita-lohia-469551122/))  
+
 
