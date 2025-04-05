@@ -6,7 +6,7 @@ An interactive Streamlit application that simulates and analyzes A/B tests using
 
 ## Live App
 Check out the deployed app here:
-[https://a-b-test-simulator-run.streamlit.app/](https://a-b-test-simulator-sim.streamlit.app/)
+[https://a-b-test-simulator-sim.streamlit.app/](https://a-b-test-simulator-sim.streamlit.app/)
 
 ---
 
