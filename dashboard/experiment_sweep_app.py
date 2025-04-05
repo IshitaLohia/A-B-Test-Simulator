@@ -104,7 +104,7 @@ with col2:
     st.pyplot(fig2)
 
 # Optional Power Curve
-with st.expander("📉 Show Power Curve Simulation"):
+with st.expander("Show Power Curve Simulation"):
     import statsmodels.stats.power as smp
     st.markdown("Estimate the statistical power for detecting a given effect size.")
     effect_size = treatment_effect / df["post_metric"].std()
@@ -130,18 +130,18 @@ st.markdown("""
 
 # Title
 st.markdown("""
-    <h2 style='text-align: center; color: #333; margin-top: 1rem;'>📊 A/B Test Experimentation Simulator</h2>
+    <h2 style='text-align: center; color: #333; margin-top: 1rem;'>A/B Test Experimentation Simulator</h2>
 """, unsafe_allow_html=True)
 
 # Sidebar Controls
 with st.sidebar:
-    st.header("🧪 Experiment Controls")
+    st.header("Experiment Controls")
     st.caption("Use these controls to simulate and visualize A/B test scenarios:")
-    n_users = st.slider("👥 Sample Size (Number of Users)", 1000, 50000, 10000, step=1000)
-    treatment_effect = st.slider("🎯 Treatment Effect (%)", 0.0, 0.1, 0.02, step=0.005)
-    dropout_rate = st.slider("❌ Dropout Rate", 0.0, 0.5, 0.1, step=0.01)
-    stratify = st.checkbox("📱 Stratified Assignment (by device)", value=True)
-    seed = st.number_input("🎲 Random Seed", min_value=0, value=42, step=1)
+    n_users = st.slider("Sample Size (Number of Users)", 1000, 50000, 10000, step=1000)
+    treatment_effect = st.slider("Treatment Effect (%)", 0.0, 0.1, 0.02, step=0.005)
+    dropout_rate = st.slider("Dropout Rate", 0.0, 0.5, 0.1, step=0.01)
+    stratify = st.checkbox("Stratified Assignment (by device)", value=True)
+    seed = st.number_input("Random Seed", min_value=0, value=42, step=1)
 
 # Generate and process data
 df = generate_experiment_data(
