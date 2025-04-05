@@ -11,7 +11,7 @@ def summarize_results(df, t_stat, p_val, bayes_results, uplift_summary):
     classical_delta = classical_treatment.mean() - classical_control.mean()
 
     if abs(classical_delta) >= practical_threshold:
-        classical_practical_msg = "The effect is practically significant (>= 1.5% difference)."
+        classical_practical_msg = "The effect is practically significant (>=", {classical_delta:.4f}, "% difference)."
     else:
         classical_practical_msg = "The effect is small and may not be practically meaningful."
 
