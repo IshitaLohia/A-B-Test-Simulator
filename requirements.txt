@@ -1,3 +1,4 @@
+
 streamlit
 pandas
 numpy
@@ -5,3 +6,4 @@ scipy
 scikit-learn
 matplotlib
 seaborn
+statsmodels
