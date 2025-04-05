@@ -17,7 +17,7 @@ from src.uplift_model import model_uplift_effects
 from src.evaluation import summarize_results
 
 # Streamlit UI Setup
-st.set_page_config(page_title="A/B Test Simulator", layout="wide")# dashboard/app.py
+st.set_page_config(page_title="A/B Test Simulator", layout="wide")
 
 import streamlit as st
 import pandas as pd
