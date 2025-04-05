@@ -71,6 +71,43 @@ This simulator allows you to design and evaluate A/B tests by controlling key ex
 
 ---
 
+## 🖥️ Interactive Dashboard
+
+This project includes a powerful Streamlit dashboard that allows users to run A/B test simulations interactively without writing code.
+
+### 🔧 What You Can Control
+Use the sidebar sliders and inputs to modify:
+- **Sample Size** – Adjust total number of users
+- **Treatment Effect (%)** – Simulate different uplift strengths
+- **Dropout Rate** – Control missing post-experiment data
+- **Stratification** – Toggle stratified randomization
+- **Random Seed** – Generate reproducible or new samples
+
+### 📈 What You Can See
+The dashboard displays:
+- **Results Summary** (p-value, posterior probability, effect size)
+- **Practical Significance** based on delta thresholds
+- **Distribution plots** of:
+  - Raw post-treatment metric
+  - CUPED-adjusted metric
+
+### 🔬 Bonus Features
+- CUPED variance reduction comparison
+- Uplift modeling results (average uplift, AUC)
+
+### ✅ How to Launch
+If running locally:
+```bash
+streamlit run dashboard/app.py
+```
+
+Once deployed on Streamlit Cloud, just open your app's public URL:
+```
+https://A-B-Test-Simulator.streamlit.app
+```
+
+---
+
 ## 🧠 Future Enhancements
 - Add sequential testing and early stopping rules
 - Integrate power calculation module
@@ -82,3 +119,4 @@ This simulator allows you to design and evaluate A/B tests by controlling key ex
 Built with ❤️ by Ishita Lohia  
 [GitHub Profile](https://github.com/IshitaLohia)  
 [LinkedIn](https://linkedin.com/in/yourprofile)
+
