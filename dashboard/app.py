@@ -1,3 +1,8 @@
+import sys
+import os
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
+
+
 import streamlit as st
 from src.simulate_experiment import generate_experiment_data
 from src.cuped import apply_cuped
