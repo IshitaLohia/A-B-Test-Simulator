@@ -105,10 +105,26 @@ with col2:
     ax2.set_title("CUPED Adjusted Metric Distribution")
     st.pyplot(fig2)
 
-# Display Recorded Simulations
-st.subheader("📋 Recorded Simulations")
+
+
+# Record each simulation run
+if 'simulations' not in st.session_state:
+    st.session_state.simulations = []
+
+# After each simulation run, append the result
+st.session_state.simulations.append({
+    "sample_size": n_users,
+    "dropout_rate": dropout_rate,
+    "treatment_effect": treatment_effect,
+    "p_value": p_val,
+    "bayes_prob_treatment_better": bayes_results['prob_treatment_better'],
+    "summary": summary
+})
+
+# Display all recorded simulations in a dataframe
 simulation_df = pd.DataFrame(st.session_state.simulations)
 st.dataframe(simulation_df)
+
 
 # Optional Power Curve
 with st.expander("📉 Show Power Curve Simulation"):
