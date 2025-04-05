@@ -26,20 +26,52 @@ steps = [
     {"sample_size": 20000, "dropout_rate": 0.1, "treatment_effect": 0.05}
 ]
 
-# Stepper logic
-step = st.number_input("Step #", min_value=0, max_value=len(steps) - 1, value=0, step=1, help="Cycle through predefined experimental setups")
-current = steps[step]
-sample_size = current["sample_size"]
-dropout_rate = current["dropout_rate"]
-treatment_effect = current["treatment_effect"]
+# Step-by-step display loop
 use_cuped = True
+for i, current in enumerate(steps):
+    sample_size = current["sample_size"]
+    dropout_rate = current["dropout_rate"]
+    treatment_effect = current["treatment_effect"]
 
-# Generate and analyze
-df = generate_experiment_data(n_users=sample_size,
-                               treatment_effect=treatment_effect,
-                               dropout_rate=dropout_rate,
-                               stratify=True,
-                               seed=42)
+    with st.expander(f"🔹 Step {i + 1}: Sample Size = {sample_size}, Dropout = {dropout_rate}, Effect = {treatment_effect}", expanded=(i == 0)):
+        df = generate_experiment_data(n_users=sample_size,
+                                       treatment_effect=treatment_effect,
+                                       dropout_rate=dropout_rate,
+                                       stratify=True,
+                                       seed=42)
+
+        metric = 'adjusted_metric' if use_cuped else 'post_metric'
+        if use_cuped:
+            df = apply_cuped(df)
+
+        t_stat, p_val = classical_t_test(df, metric_col=metric)
+        bayes = run_bayesian_ab_test(df, metric_col=metric)
+
+        st.write(f"**Sample Size:** {sample_size}")
+        st.write(f"**Dropout Rate:** {dropout_rate}")
+        st.write(f"**Treatment Effect:** {treatment_effect}")
+        st.write(f"**Using CUPED:** {'Yes' if use_cuped else 'No'}")
+
+        col1, col2 = st.columns(2)
+
+        with col1:
+            st.markdown("**Metric Distribution by Group**")
+            fig1, ax1 = plt.subplots()
+            sns.kdeplot(data=df, x=metric, hue="group", fill=True, ax=ax1)
+            ax1.set_title("Metric Distribution")
+            st.pyplot(fig1)
+
+        with col2:
+            st.markdown("**Summary Statistics**")
+            control = df[df.group == 'control'][metric].dropna()
+            treatment = df[df.group == 'treatment'][metric].dropna()
+            st.write(f"Mean (Control): {control.mean():.4f}")
+            st.write(f"Mean (Treatment): {treatment.mean():.4f}")
+            st.write(f"T-statistic: {t_stat:.4f}")
+            st.write(f"P-value: {p_val:.4f}")
+            st.write(f"Bayesian P(Treatment > Control): {bayes['prob_treatment_better']:.4f}")
+
+
 if use_cuped:
     df = apply_cuped(df)
     metric = 'adjusted_metric'
@@ -49,32 +81,4 @@ else:
 t_stat, p_val = classical_t_test(df, metric_col=metric)
 bayes = run_bayesian_ab_test(df, metric_col=metric)
 
-st.subheader("📊 Generated Results")
-st.write(f"**Step:** {step + 1} / {len(steps)}")
-st.write(f"**Sample Size:** {sample_size}")
-st.write(f"**Dropout Rate:** {dropout_rate}")
-st.write(f"**Treatment Effect:** {treatment_effect}")
-st.write(f"**Using CUPED:** {'Yes' if use_cuped else 'No'}")
 
-# Metric Distributions
-col1, col2 = st.columns(2)
-
-with col1:
-    st.markdown("**Metric Distribution by Group**")
-    fig1, ax1 = plt.subplots()
-    sns.kdeplot(data=df, x=metric, hue="group", fill=True, ax=ax1)
-    ax1.set_title("Metric Distribution")
-    st.pyplot(fig1)
-
-with col2:
-    st.markdown("**Summary Statistics**")
-    control = df[df.group == 'control'][metric].dropna()
-    treatment = df[df.group == 'treatment'][metric].dropna()
-    st.write(f"Mean (Control): {control.mean():.4f}")
-    st.write(f"Mean (Treatment): {treatment.mean():.4f}")
-    st.write(f"T-statistic: {t_stat:.4f}")
-    st.write(f"P-value: {p_val:.4f}")
-    st.write(f"Bayesian P(Treatment > Control): {bayes['prob_treatment_better']:.4f}")
-
-st.markdown("---")
-st.info("Use the step selector to view how changes in experimental setup affect your results.")
