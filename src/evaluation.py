@@ -1,4 +1,3 @@
-
 def summarize_results(df, t_stat, p_val, bayes_results, uplift_summary):
     """
     Print and summarize key outputs from all methods, including practical significance.
@@ -14,7 +13,6 @@ def summarize_results(df, t_stat, p_val, bayes_results, uplift_summary):
         classical_practical_msg = "The effect is practically significant (>= 1.5% difference)."
     else:
         classical_practical_msg = "The effect is small and may not be practically meaningful."
-
 
     # Bayesian Effect Size
     bayes_delta = bayes_results['posterior_mean_treatment'] - bayes_results['posterior_mean_control']
