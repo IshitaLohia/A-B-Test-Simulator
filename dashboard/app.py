@@ -1,13 +1,13 @@
 import streamlit as st
-#from src.simulate_experiment import generate_experiment_data
-#from src.cuped import apply_cuped
-#from src.inference_methods import classical_t_test
-#from src.bayesian_ab import run_bayesian_ab_test
-#from src.uplift_model import model_uplift_effects
-#from src.evaluation import summarize_results
+from src.simulate_experiment import generate_experiment_data
+from src.cuped import apply_cuped
+from src.inference_methods import classical_t_test
+from src.bayesian_ab import run_bayesian_ab_test
+from src.uplift_model import model_uplift_effects
+from src.evaluation import summarize_results
 
 st.set_page_config(page_title="A/B Test Simulator", layout="wide")
-st.title("Meta-Style A/B Testing Simulator")
+st.title("📊 Meta-Style A/B Testing Simulator")
 
 with st.sidebar:
     st.header("Experiment Controls")
