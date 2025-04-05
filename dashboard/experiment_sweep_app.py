@@ -1,96 +1,117 @@
+# dashboard/app.py
+
 import streamlit as st
+import pandas as pd
 import matplotlib.pyplot as plt
 import seaborn as sns
-import pandas as pd
 import numpy as np
 import sys
 import os
-import time
-
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 
 from src.simulate_experiment import generate_experiment_data
 from src.cuped import apply_cuped
 from src.inference_methods import classical_t_test
 from src.bayesian_ab import run_bayesian_ab_test
-
-# Cache the data generation to speed up
-@st.cache_data
-def get_experiment_data(sample_size, treatment_effect, dropout_rate, use_cuped=True):
-    df = generate_experiment_data(n_users=sample_size,
-                                  treatment_effect=treatment_effect,
-                                  dropout_rate=dropout_rate,
-                                  stratify=True,
-                                  seed=42)
-    if use_cuped:
-        df = apply_cuped(df)
-    return df
+from src.uplift_model import model_uplift_effects
+from src.evaluation import summarize_results
 
 # Streamlit UI Setup
-st.set_page_config(page_title="Step-by-Step A/B Test Explorer", layout="wide")
-st.title("🔍 Step-by-Step A/B Test Impact Explorer")
+st.set_page_config(page_title="A/B Test Simulator", page_icon="📊", layout="wide")
 
-# Predefined steps
-steps = [
-    {"sample_size": 1000, "dropout_rate": 0.0, "treatment_effect": 0.02},
-    {"sample_size": 5000, "dropout_rate": 0.1, "treatment_effect": 0.02},
-    {"sample_size": 10000, "dropout_rate": 0.2, "treatment_effect": 0.02},
-    {"sample_size": 20000, "dropout_rate": 0.1, "treatment_effect": 0.05}
-]
+# Dark mode toggle
+mode = st.sidebar.radio("🌓 Select Theme", ["Light", "Dark"])
+if mode == "Dark":
+    st.markdown("""
+        <style>
+            body {background-color: #111; color: #f0f0f0;}
+            .block-container {background-color: #1c1c1c; color: #f0f0f0;}
+        </style>
+    """, unsafe_allow_html=True)
 
-# Stepper logic with buttons
-if 'step' not in st.session_state:
-    st.session_state.step = 0
+# Title
+st.markdown("""
+    <h2 style='text-align: center; color: #333; margin-top: 1rem;'>📊 A/B Test Experimentation Simulator</h2>
+""", unsafe_allow_html=True)
 
-# Buttons to navigate steps
-col1, col2 = st.columns([1, 1])
-with col1:
-    if st.session_state.step > 0:
-        if st.button("Previous Step"):
-            st.session_state.step -= 1
+# Sidebar Controls
+with st.sidebar:
+    st.header("🧪 Experiment Controls")
+    st.caption("Use these controls to simulate and visualize A/B test scenarios:")
+    n_users = st.slider("👥 Sample Size (Number of Users)", 1000, 50000, 10000, step=1000)
+    treatment_effect = st.slider("🎯 Treatment Effect (%)", 0.0, 0.1, 0.02, step=0.005)
+    dropout_rate = st.slider("❌ Dropout Rate", 0.0, 0.5, 0.1, step=0.01)
+    stratify = st.checkbox("📱 Stratified Assignment (by device)", value=True)
+    seed = st.number_input("🎲 Random Seed", min_value=0, value=42, step=1)
 
-with col2:
-    if st.session_state.step < len(steps) - 1:
-        if st.button("Next Step"):
-            st.session_state.step += 1
+# Generate and process data
+df = generate_experiment_data(
+    n_users=n_users,
+    treatment_effect=treatment_effect,
+    dropout_rate=dropout_rate,
+    stratify=stratify,
+    seed=seed
+)
+df = apply_cuped(df)
+t_stat, p_val = classical_t_test(df)
+bayes_results = run_bayesian_ab_test(df)
+uplift_summary = model_uplift_effects(df)
+summary = summarize_results(df, t_stat, p_val, bayes_results, uplift_summary)
 
-# Get current step values
-current = steps[st.session_state.step]
-sample_size = current["sample_size"]
-dropout_rate = current["dropout_rate"]
-treatment_effect = current["treatment_effect"]
-use_cuped = True
+# Layout Single Screen
+st.subheader("📄 Results Summary")
+st.text_area("Experiment Output", summary, height=500)
 
-# Display current step details
-st.subheader(f"Step {st.session_state.step + 1}: Sample Size = {sample_size}, Dropout Rate = {dropout_rate}, Treatment Effect = {treatment_effect}")
-
-# Display loading message while processing
-with st.spinner('Running the A/B test simulation...'):
-    df = get_experiment_data(sample_size, treatment_effect, dropout_rate, use_cuped)
-    metric = 'adjusted_metric' if use_cuped else 'post_metric'
-
-    t_stat, p_val = classical_t_test(df, metric_col=metric)
-    bayes = run_bayesian_ab_test(df, metric_col=metric)
-
-# Display Results
+# Distributions Side-by-Side
+st.subheader("📈 Metric Distributions with Confidence Intervals")
 col1, col2 = st.columns(2)
 
 with col1:
-    st.markdown("**Metric Distribution by Group**")
-    fig1, ax1 = plt.subplots(figsize=(6, 4))
-    sns.kdeplot(data=df, x=metric, hue="group", fill=True, ax=ax1)
-    ax1.set_title("Metric Distribution")
+    st.markdown("**Raw Post Metric**")
+    fig1, ax1 = plt.subplots()
+    sns.kdeplot(data=df, x="post_metric", hue="group", fill=True, ax=ax1)
+    mean_post = df.groupby("group")["post_metric"].mean()
+    std_post = df.groupby("group")["post_metric"].std()
+    for g in ["control", "treatment"]:
+        ax1.axvline(mean_post[g], linestyle="--", label=f"{g} mean")
+        ax1.axvline(mean_post[g] - std_post[g], color="gray", linestyle=":", alpha=0.5)
+        ax1.axvline(mean_post[g] + std_post[g], color="gray", linestyle=":", alpha=0.5)
+    ax1.set_title("Post Metric Distribution by Group")
     st.pyplot(fig1)
 
 with col2:
-    st.markdown("**Summary Statistics**")
-    control = df[df.group == 'control'][metric].dropna()
-    treatment = df[df.group == 'treatment'][metric].dropna()
-    st.write(f"Mean (Control): {control.mean():.4f}")
-    st.write(f"Mean (Treatment): {treatment.mean():.4f}")
-    st.write(f"T-statistic: {t_stat:.4f}")
-    st.write(f"P-value: {p_val:.4f}")
-    st.write(f"Bayesian P(Treatment > Control): {bayes['prob_treatment_better']:.4f}")
+    st.markdown("**CUPED Adjusted Metric**")
+    fig2, ax2 = plt.subplots()
+    adjusted = df.dropna(subset=['adjusted_metric'])
+    sns.kdeplot(data=adjusted, x="adjusted_metric", hue="group", fill=True, ax=ax2)
+    mean_adj = adjusted.groupby("group")["adjusted_metric"].mean()
+    std_adj = adjusted.groupby("group")["adjusted_metric"].std()
+    for g in ["control", "treatment"]:
+        ax2.axvline(mean_adj[g], linestyle="--", label=f"{g} mean")
+        ax2.axvline(mean_adj[g] - std_adj[g], color="gray", linestyle=":", alpha=0.5)
+        ax2.axvline(mean_adj[g] + std_adj[g], color="gray", linestyle=":", alpha=0.5)
+    ax2.set_title("CUPED Adjusted Metric Distribution")
+    st.pyplot(fig2)
 
-st.markdown("---")
-st.info("Use the 'Next Step' and 'Previous Step' buttons to view results for different experimental setups.")
+# Optional Power Curve
+with st.expander("📉 Show Power Curve Simulation"):
+    import statsmodels.stats.power as smp
+    st.markdown("Estimate the statistical power for detecting a given effect size.")
+    effect_size = treatment_effect / df["post_metric"].std()
+    sample_sizes = np.arange(500, 10001, 500)
+    power = [smp.TTestIndPower().power(effect_size=effect_size, nobs1=n, alpha=0.05) for n in sample_sizes]
+    fig3, ax3 = plt.subplots()
+    ax3.plot(sample_sizes, power)
+    ax3.axhline(0.8, color="red", linestyle="--")
+    ax3.set_xlabel("Sample Size")
+    ax3.set_ylabel("Power")
+    ax3.set_title("Power Curve vs Sample Size")
+    st.pyplot(fig3)
+
+# Hide Streamlit footer
+st.markdown("""
+    <style>
+        footer {visibility: hidden;}
+        .block-container {padding-top: 1rem; padding-bottom: 2rem;}
+    </style>
+""", unsafe_allow_html=True)
