@@ -1,16 +1,16 @@
-# 📊 A/B Testing Simulator
+# A/B Testing Simulator
 
 An interactive Streamlit application that simulates and analyzes A/B tests using advanced experimentation techniques.
 
 ---
 
-## 🚀 Live App
+## Live App
 Check out the deployed app here:
 https://a-b-test-simulator-run.streamlit.app/
 
 ---
 
-## 🧪 Features
+##  Features
 - **Synthetic Data Simulation**: Generate realistic user-level A/B test data with configurable sample size, treatment effects, dropouts, and stratification.
 - **CUPED Adjustment**: Reduces variance using pre-experiment metrics.
 - **Classical A/B Testing**: Two-sample t-tests with significance level.
@@ -36,26 +36,6 @@ A-B-Test-Simulator/
 └── README.md                # Project documentation
 ```
 
----
-
-## 💻 Run Locally
-### 1. Clone the repository:
-```bash
-git clone https://github.com/IshitaLohia/A-B-Test-Simulator.git
-cd A-B-Test-Simulator
-```
-
-### 2. Install dependencies:
-```bash
-pip install -r requirements.txt
-```
-
-### 3. Run the Streamlit app:
-```bash
-streamlit run dashboard/app.py
-```
-
----
 
 ## ⚙️ How It Works
 
@@ -75,7 +55,7 @@ This simulator allows you to design and evaluate A/B tests by controlling key ex
 
 This project includes a powerful Streamlit dashboard that allows users to run A/B test simulations interactively without writing code.
 
-### 🔧 What You Can Control
+###  What You Can Control
 Use the sidebar sliders and inputs to modify:
 - **Sample Size** – Adjust total number of users
 - **Treatment Effect (%)** – Simulate different uplift strengths
@@ -83,7 +63,7 @@ Use the sidebar sliders and inputs to modify:
 - **Stratification** – Toggle stratified randomization
 - **Random Seed** – Generate reproducible or new samples
 
-### 📈 What You Can See
+###  What You Can See
 The dashboard displays:
 - **Results Summary** (p-value, posterior probability, effect size)
 - **Practical Significance** based on delta thresholds
@@ -91,24 +71,13 @@ The dashboard displays:
   - Raw post-treatment metric
   - CUPED-adjusted metric
 
-### 🔬 Bonus Features
+###  Bonus Features
 - CUPED variance reduction comparison
 - Uplift modeling results (average uplift, AUC)
 
-### ✅ How to Launch
-If running locally:
-```bash
-streamlit run dashboard/app.py
-```
-
-Once deployed on Streamlit Cloud, just open your app's public URL:
-```
-https://A-B-Test-Simulator.streamlit.app
-```
-
 ---
 
-## 🧠 Future Enhancements
+## Future Enhancements
 - Add sequential testing and early stopping rules
 - Integrate power calculation module
 - Upload and analyze real-world test logs (CSV input)
@@ -118,5 +87,5 @@ https://A-B-Test-Simulator.streamlit.app
 ## 👨‍💻 Author
 Built with ❤️ by Ishita Lohia  
 [GitHub Profile](https://github.com/IshitaLohia)  
-[LinkedIn](https://linkedin.com/in/yourprofile)
+https://www.linkedin.com/in/ishita-lohia-469551122/
 
