@@ -17,6 +17,21 @@ from src.evaluation import summarize_results
 # Streamlit UI Setup
 st.set_page_config(page_title="A/B Test Simulator", layout="wide")
 
+
+# Custom CSS for horizontal and vertical padding
+st.markdown("""
+    <style>
+        .main .block-container {
+            padding-top: 3rem;        /* vertical padding at the top */
+        }
+    </style>
+    """, unsafe_allow_html=True)
+
+st.title("A/B Test Simulator")
+
+# rest of your app content...
+
+
 # Dark mode toggle
 mode = st.sidebar.radio("Select Theme", ["Light", "Dark"])
 if mode == "Dark":
