@@ -54,16 +54,19 @@ summary = summarize_results(df, t_stat, p_val, bayes_results, uplift_summary)
 st.subheader("📄 Results Summary")
 st.text_area("Experiment Output", summary, height=500)
 
+# Distributions Side-by-Side
 st.subheader("📈 Metric Distributions")
-tab1, tab2 = st.tabs(["Raw Post Metric", "CUPED Adjusted"])
+col1, col2 = st.columns(2)
 
-with tab1:
+with col1:
+    st.markdown("**Raw Post Metric**")
     fig1, ax1 = plt.subplots()
     sns.kdeplot(data=df, x="post_metric", hue="group", fill=True, ax=ax1)
     ax1.set_title("Post Metric Distribution by Group")
     st.pyplot(fig1)
 
-with tab2:
+with col2:
+    st.markdown("**CUPED Adjusted Metric**")
     fig2, ax2 = plt.subplots()
     sns.kdeplot(data=df.dropna(subset=['adjusted_metric']), x="adjusted_metric", hue="group", fill=True, ax=ax2)
     ax2.set_title("CUPED Adjusted Metric Distribution")
